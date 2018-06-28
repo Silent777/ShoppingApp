@@ -1,25 +1,13 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-import os
+from flask import Blueprint
+from flask_restful import Api
+from resources.Category import CategoryResource
+from resources.Comment import CommentResource
 
 
-app = Flask(__name__)
-app.config.from_object(os.environ.get('APP_SETTINGS'))
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+api_bp = Blueprint('api', __name__)
+api = Api(api_bp)
 
-from models import Result
+# Routes
 
-
-@app.route('/')
-def hello():
-    return "Hello World!"
-
-
-@app.route('/<name>')
-def hello_name(name):
-    return "Hello {}!".format(name)
-
-
-if __name__ == '__main__':
-    app.run()
+api.add_resource(CategoryResource, '/Category')
+api.add_resource(CommentResource, '/Comment')

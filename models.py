@@ -1,17 +1,53 @@
-from app import db
-from sqlalchemy.dialects.postgresql import JSON
+from flask_sqlalchemy import SQLAlchemy
+from marshmallow import fields, validate
+from flask_marshmallow import Marshmallow
 
+ma = Marshmallow()
+db = SQLAlchemy()
 
-class Result(db.Model):
-    __tablename__ = 'results'
+class Basket(db.Model):
+    __tablename__ = 'basket'
 
     id = db.Column(db.Integer, primary_key=True)
     url = db.Column(db.String())
 
-    def __init__(self, url, result_all, result_no_stop_words):
+    def __init__(self, url, result_all):
         self.url = url
         self.result_all = result_all
-        self.result_no_stop_words = result_no_stop_words
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
+
+
+class Comment(db.Model):
+    __tablename__ = 'comments'
+    id = db.Column(db.Integer, primary_key=True)
+    comment = db.Column(db.String(250), nullable=False)
+    creation_date = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp(), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.id', ondelete='CASCADE'), nullable=False)
+    category = db.relationship('Category', backref=db.backref('comments', lazy='dynamic'))
+
+    def __init__(self, comment, category_id):
+        self.comment = comment
+        self.category_id = category_id
+
+
+class Category(db.Model):
+    __tablename__ = 'categories'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(150), unique=True, nullable=False)
+
+    def __init__(self, name):
+        self.name = name
+
+
+class CategorySchema(ma.Schema):
+    id = fields.Integer()
+    name = fields.String(required=True)
+
+
+class CommentSchema(ma.Schema):
+    id = fields.Integer(dump_only=True)
+    category_id = fields.Integer(required=True)
+    comment = fields.String(required=True, validate=validate.Length(1))
+    creation_date = fields.DateTime()
