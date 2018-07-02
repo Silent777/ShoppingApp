@@ -6,7 +6,7 @@ from run import create_app
 
 app = create_app()
 
-app.config.from_object(os.environ.get('APP_SETTINGS'))
+app.config.from_object(os.environ.get("config.DevelopmentConfig"))
 
 migrate = Migrate(app, db)
 manager = Manager(app)
