@@ -1,23 +1,15 @@
 import os
+from local_config import *
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-
-POSTGRES = {
-    'user': 'postgres',
-    'pw': 'sum41182',
-    'db': 'shopping',
-    'host': 'localhost',
-    'port': '5432',
-}
 
 
 class Config(object):
     DEBUG = False
     TESTING = False
     CSRF_ENABLED = True
-    SECRET_KEY = 'this-really-needs-to-be-changed'
-    SQLALCHEMY_DATABASE_URI = 'postgresql://%(user)s:\
-%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
+    SECRET_KEY = SECRET_KEY
+    SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI
 
 
 class ProductionConfig(Config):
@@ -36,3 +28,4 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
     TESTING = True
+

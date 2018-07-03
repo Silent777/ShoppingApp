@@ -5,7 +5,8 @@ from flask_marshmallow import Marshmallow
 ma = Marshmallow()
 db = SQLAlchemy()
 
-basket_items = db.Table('baskets_items', db.metadata,
+'''
+basket_item = db.Table('baskets_items', db.metadata,
                         db.Column('id', db.Integer, primary_key=True),
                         db.Column('baskets', db.Integer, db.ForeignKey('baskets.id', ondelete='CASCADE')),
                         db.Column('items', db.Integer, db.ForeignKey('items.id',ondelete='CASCADE'))
@@ -26,6 +27,8 @@ class User(db.Model):
         self.first_name = first_name
         self.last_name = last_name
         self.basket_id = basket_id
+
+
 
 
 class Basket(db.Model):
@@ -53,6 +56,7 @@ class Basket(db.Model):
         return '<id {}>'.format(self.id)
 
 
+
 class Item(db.Model):
     __tablename__ = 'items'
     id = db.Column(db.Integer, primary_key=True)
@@ -63,6 +67,7 @@ class Item(db.Model):
     def __init__(self, name, price):
         self.name = name,
         self.price = price,
+'''
 
 
 class BasketSchema(ma.Schema):

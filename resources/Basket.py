@@ -1,6 +1,11 @@
 from flask import request
 from flask_restful import Resource
-from models import db, Basket, BasketSchema, Item
+
+from basket.model import Basket
+from item.model import Item
+from basket.shema import BasketSchema
+from db import db
+
 
 baskets_schema = BasketSchema(many=True)
 basket_schema = BasketSchema()
@@ -33,8 +38,12 @@ class BasketResource(Resource):
 
         items = get_items(json_data['items'])
 
+        price = 0
+        for item in items:
+            price += item[0].price
+
         basket = Basket.create(
-            price=json_data['price'],
+            price=price,
             items=items
         )
 
